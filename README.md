@@ -324,22 +324,58 @@ Inline data URI trigger:
 
 ## Homey Image Poster app
 
-If you use the Homey Image Poster app, point it to:
+[Image Poster](https://homey.app/en-gb/app/com.smsapi.imageposter/) is a Homey app that lets you use a flow action card to POST a camera snapshot image directly to any HTTP endpoint as a multipart form upload. This module is built to receive those uploads.
 
-```text
-http://<MAGICMIRROR_IP>:8132/api/homey-bridge/media/upload
+### How it works end-to-end
+
+1. A Homey flow triggers (motion detected, doorbell pressed, schedule, etc.).
+2. The flow uses the Image Poster **"Send image"** action card.
+3. Image Poster POSTs the image as a multipart/form-data upload to the URL you configure.
+4. This module receives the upload, caches the file, and optionally shows it as a fullscreen overlay on the mirror.
+
+### Setting up Image Poster in Homey
+
+1. Install **Image Poster** from the Homey App Store.
+2. In your Homey flow, add an action card from Image Poster: **"Send image to URL"**.
+3. In the card settings, fill in:
+   - **URL**: `http://<MAGICMIRROR_IP>:8132/api/homey-bridge/media/upload`
+   - **Image**: pick the camera or image token from an earlier flow card (e.g. a snapshot from a Eufy, Ring, or Arlo camera trigger card)
+   - **Field name**: `image` (must match `mediaServer.uploadFieldName` in your module config — the default is `image`)
+4. Optionally add extra fields in Image Poster to pass metadata:
+   - `source` — identifies the camera, e.g. `front-door`. Lets the mirror show per-camera images.
+   - `cameraName` — a human-readable label shown in the caption if `showSnapshotCaption` is enabled.
+
+### Matching module config
+
+Enable the media server and configure it to receive and display uploads:
+
+```javascript
+mediaServer: {
+  enabled: true,
+  publicPath: "/api/homey-bridge/media",
+  uploadFieldName: "image",       // must match Image Poster field name
+  defaultSource: "front-door",    // fallback if no source field is sent
+  allowUploads: true,
+  maxUploadSizeMb: 8,
+  retainHistory: 5,               // keep last 5 snapshots per source
+  showOnUpload: true,             // show overlay immediately on receipt
+  duration: 60000                 // how long to show it in milliseconds
+}
 ```
 
-The module will:
+Set `showSnapshot: true` at the top level if you want the frontend to render the image directly in the module position rather than as a fullscreen overlay.
 
-- receive the uploaded image file
-- cache it locally
-- optionally serve it back from `/api/homey-bridge/media/latest/<source>`
-- optionally show it as an overlay immediately after upload
+### What happens after upload
 
-## Notes For Publishing
+- The image is saved to `media-cache/` inside the module folder.
+- It is immediately available at:
 
-This README is structured to match common MagicMirror module expectations: short purpose, installation, example config, configuration reference, endpoints, and integration notes.
+```text
+GET http://<MAGICMIRROR_IP>:8132/api/homey-bridge/media/latest/<source>
+```
+
+- Other modules can consume that URL to display the latest snapshot without needing their own Homey credentials.
+- If `showOnUpload: true`, the overlay appears on the mirror automatically.
 
 ## Repository Notes
 
