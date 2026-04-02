@@ -27,6 +27,9 @@
   "engines": {
     "node": ">=18"
   },
+  "scripts": {
+    "discover": "node tools/discover-homey-devices.js"
+  },
   "dependencies": {
     "busboy": "^1.6.0",
     "mqtt": "^5.15.0"

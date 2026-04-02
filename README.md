@@ -48,6 +48,54 @@ npm install
 
 Then add the module to your `config/config.js` file.
 
+## Device Discovery
+
+Before configuring MQTT topics or API pollers, use the included device discovery tool to find Homey device IDs, capabilities, and MQTT topic paths.
+
+### Quick Start
+
+1. Ensure your `config/config.js` has your Homey IP and API token defined:
+   ```javascript
+   const homeyIP = "192.168.10.35";  // Your Homey IP
+   const Homey_API = "your-api-token-here";
+   ```
+
+2. Copy and run the discovery tool:
+   ```bash
+   cd ~/MagicMirror/modules/MMM-HomeyIntegration
+   cp tools/discover-homey-devices.js.sample tools/discover-homey-devices.js
+   node tools/discover-homey-devices.js
+   ```
+
+3. The tool prints all your Homey devices with:
+   - Device name, class, and ID
+   - All capabilities (temperature, humidity, power, etc.)
+   - Ready-to-copy MQTT topic configurations
+
+### Examples
+
+List all devices:
+```bash
+node tools/discover-homey-devices.js
+```
+
+Find devices by name (wildcard support):
+```bash
+node tools/discover-homey-devices.js "*temperature*"
+node tools/discover-homey-devices.js "*clock*"
+```
+
+Find devices with specific capability:
+```bash
+node tools/discover-homey-devices.js "*" "measure_temperature"
+node tools/discover-homey-devices.js "" "measure_power"
+```
+
+Use command-line flags instead of config.js:
+```bash
+node tools/discover-homey-devices.js --ip 192.168.10.35 --token YOUR_HOMEY_API_TOKEN
+```
+
 ## Features
 
 - webhook bridge for Homey flows
