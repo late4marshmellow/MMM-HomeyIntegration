@@ -1,0 +1,34 @@
+{
+  "name": "mmm-homeyintegration",
+  "version": "1.0.0",
+  "description": "Homey integration bridge for MagicMirror with webhook, MQTT, API, media upload, and optional media serving",
+  "main": "node_helper.js",
+  "keywords": [
+    "MagicMirror",
+    "Homey",
+    "MQTT",
+    "webhook",
+    "REST",
+    "camera",
+    "snapshot",
+    "media",
+    "integration"
+  ],
+  "author": "late4marshmellow <alncm@tutanota.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/late4marshmellow/MMM-HomeyIntegration.git"
+  },
+  "bugs": {
+    "url": "https://github.com/late4marshmellow/MMM-HomeyIntegration/issues"
+  },
+  "homepage": "https://github.com/late4marshmellow/MMM-HomeyIntegration#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "mqtt": "^5.15.0"
+  }
+}
